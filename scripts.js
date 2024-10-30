@@ -1,51 +1,49 @@
-// Select DOM elements
-const videoPlayer = document.querySelector('.player');
-const photoCanvas = document.querySelector('.photo');
-const context = photoCanvas.getContext('2d');
-const photoStrip = document.querySelector('.strip');
-const soundEffect = document.querySelector('.snap');
+const video = document.querySelector('.player');
+const canvas = document.querySelector('.photo');
+const ctx = canvas.getContext('2d');
+const strip = document.querySelector('.strip');
+const snap = document.querySelector('.snap');
 
-// Function to initialize video stream
-async function initializeVideo() {
-  try {
-    const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
-    console.log(mediaStream);
-    videoPlayer.srcObject = mediaStream;
-    videoPlayer.play();
-  } catch (error) {
-    console.error('Error accessing webcam:', error);
-  }
+function getVideo() {
+  navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+    .then(localMediaStream => {
+      console.log(localMediaStream);
+      video.srcObject = localMediaStream;
+      video.play();
+    })
+    .catch(err => {
+      console.error(`OH NO!!!`, err);
+    });
 }
 
-// Function to paint video frames onto the canvas
-function renderVideoToCanvas() {
-  const { videoWidth: width, videoHeight: height } = videoPlayer;
-  photoCanvas.width = width;
-  photoCanvas.height = height;
+function paintToCanvas() {
+  const width = video.videoWidth;
+  const height = video.videoHeight;
+  canvas.width = width;
+  canvas.height = height;
 
-  setInterval(() => {
-    context.drawImage(videoPlayer, 0, 0, width, height);
-    // Capture pixel data
-    const pixelData = context.getImageData(0, 0, width, height);
-    context.putImageData(pixelData, 0, 0);
+  return setInterval(() => {
+    ctx.drawImage(video, 0, 0, width, height);
+    // take the pixels out
+    let pixels = ctx.getImageData(0, 0, width, height);
+    ctx.putImageData(pixels, 0, 0);
   }, 16);
 }
 
-// Function to capture a photo
-function capturePhoto() {
-  // Play the sound effect
-  soundEffect.currentTime = 0;
-  soundEffect.play();
+function takePhoto() {
+  // played the sound
+  snap.currentTime = 0;
+  snap.play();
 
-  // Get data from the canvas and create a downloadable link
-  const imageData = photoCanvas.toDataURL('image/jpeg');
-  const downloadLink = document.createElement('a');
-  downloadLink.href = imageData;
-  downloadLink.setAttribute('download', 'captured_image.jpg');
-  downloadLink.innerHTML = `<img src="${imageData}" alt="Captured Image" />`;
-  photoStrip.insertBefore(downloadLink, photoStrip.firstChild);
+  // take the data out of the canvas
+  const data = canvas.toDataURL('image/jpeg');
+  const link = document.createElement('a');
+  link.href = data;
+  link.setAttribute('download', 'dowloadImage');
+  link.innerHTML = `<img src="${data}" alt="dowloadImage" />`;
+  strip.insertBefore(link, strip.firstChild);
 }
 
-// Start video stream and setup event listener
-initializeVideo();
-videoPlayer.addEventListener('canplay', renderVideoToCanvas);
+getVideo();
+
+video.addEventListener('canplay', paintToCanvas);
