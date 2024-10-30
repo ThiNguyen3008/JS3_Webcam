@@ -1,0 +1,60 @@
+/* Set box-sizing for the document and all elements */
+html {
+  box-sizing: border-box;
+  font-size: 10px; /* Base font size for rem calculations */
+  background-color: #ffd4ee; /* Light pink background */
+}
+
+/* Inherit box-sizing from html */
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+/* Photobooth styling */
+.photobooth {
+  background-color: #fff; /* White background */
+  max-width: 150rem; /* Maximum width */
+  margin: 2rem auto; /* Centered with vertical margin */
+  border-radius: 2px; /* Rounded corners */
+}
+
+/* Clearfix for floated elements */
+.photobooth::after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+/* Photo container styling */
+.photo {
+  width: 100%; /* Full width */
+  float: left; /* Floats left */
+}
+
+/* Video player styling */
+.player {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 200px; /* Fixed width for video player */
+}
+
+/* Strip styling */
+.strip {
+  padding: 2rem; /* Padding around the strip */
+}
+
+.strip img {
+  width: 100px; /* Fixed width for images */
+  overflow-x: scroll; /* Allow horizontal scrolling */
+  padding: 0.8rem 0.8rem 2.5rem; /* Padding around images */
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+  background-color: #fff; /* White background for images */
+}
+
+/* Rotate images in the strip for a playful effect */
+.strip a:nth-child(5n+1) img { transform: rotate(10deg); }
+.strip a:nth-child(5n+2) img { transform: rotate(-2deg); }
+.strip a:nth-child(5n+3) img { transform: rotate(8deg); }
+.strip a:nth-child(5n+4) img { transform: rotate(-11deg); }
+.strip a:nth-child(5n+5) img { transform: rotate(12deg); }
